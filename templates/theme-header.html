@@ -3,8 +3,19 @@
 <%namespace name='static' file='/static_content.html'/>
 <%inherit file="/navigation.html"/>
 
+## Toss the SGU brand bar on top of the page
+<%block name="navigation_top">
+  <div id="su-header">
+    <div class="su-container">
+      <a href="http://curricu.me">
+        <img src="https://dl.dropboxusercontent.com/u/38501835/curricume_words.png" alt="Go To Curricu.me Home Page" width="138" height="23">
+      </a>
+    </div>
+  </div>
+</%block>
+
 ## TODO: this will eventually be moved to the Sass
 <%block name="navigation_logo">
-  <img src="${static.url('themes/default/images/OpenEdXLogo.png')}" height="50" alt="Home Page" />
+  <img src="${static.url('themes/default/images/curricume_logo_cc.png')}" height="50" alt="EdX Curricu.me Logo" />
 </%block>
 
