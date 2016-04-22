@@ -368,6 +368,40 @@ import json
     </header>
     <section class="user-info">
       <ul>
+	<li class="info--username">
+          <span class="title">${_("Full Name")}</span> <span class="data">${ user.profile.name | h }</span>
+        </li>
+        <li class="info--email">
+          <span class="title">${_("Email")}
+          </span> <span class="data">${ user.email | h }</span>
+        </li>
+        <li class="info--extra">
+          <span class="title">
+            ${_("Extra User Data")}
+          </span>
+          <%!
+            def ue_field(user, field):
+               if hasattr(user, 'userextra'):
+                   return getattr(user.userextra, field, '')
+               else:
+                   return ''
+          %>
+          <div id="extra_present" style="display: ${'block' if hasattr(user, 'userextra') else 'none'}">
+            % for label, field in (('Employee ID:', 'employee'), ('Div:', 'div'), ('SM:', 'sm'), ('Dept:', 'dept'), ('Reports To:', 'reports_to')):
+              <span class="data">
+                ${label}
+                <span id="extra_${field}_val" style="display: inline">
+                  ${ ue_field(user, field) | h }
+                </span>
+              </span>
+            % endfor
+          </div>
+          <div id="extra_present" style="display: ${'none' if hasattr(user, 'userextra') else 'block'}">
+            <span class="data">
+              Not filled yet
+            </span>
+          </div>
+        </li>
 
         % if len(order_history_list):
         <li class="order-history">
