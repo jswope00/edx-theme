@@ -1,0 +1,450 @@
+<%! from django.utils.translation import ugettext as _ %>
+<%! from django.template import RequestContext %>
+<%! from third_party_auth import pipeline %>
+
+<%!
+  from django.core.urlresolvers import reverse
+  import waffle
+  from courseware.courses import get_course_about_section
+%>
+
+<%
+  cert_name_short = settings.CERT_NAME_SHORT
+  cert_name_long = settings.CERT_NAME_LONG
+%>
+
+<%inherit file="main.html" />
+
+<%block name="headextra">
+ <style type='text/css'>
+  table
+  {
+   border-radius: 3px 0px 0px 3px;
+   color: #3C3C3C;
+   table-layout: fixed;
+   border-collapse: collapse;
+   border-spacing: 0px;
+   text-align: left;
+   font-family: "Source Sans","Open Sans",Verdana,Geneva,sans-serif,sans-serif;
+   font-size: 1em;
+   font-style: normal;
+   line-height: 1em;
+  }
+
+  tr:nth-child(2n) td
+  {
+    background-color: #FBFBFB;
+  }
+
+  td,th
+  {
+   height: 50px;
+   padding-left: 20px;
+   padding-right: 10px;
+   border-bottom: 1px solid #E1E1E1;
+   border-top: 1px solid #E1E1E1;
+   border-left: 1px solid #C8C8C8;
+   border-right: 1px solid #C8C8C8;
+   background: none repeat scroll 0% 0% #F3F3F3;
+   font-size: 13px;
+   line-height: 50px;
+   vertical-align: top;
+  }
+
+  .float_left
+  {
+   float: left;
+  }
+
+  .width_45pct
+  {
+   width: 45%;
+  }
+
+  .width_50pct
+  {
+   width: 50%;
+  }
+
+  a.button_link
+  {
+   background-clip: padding-box;
+   color: #000;
+   border-radius: 3px;
+   letter-spacing: 0px;
+   padding: 6px 15px 7px;
+   text-align: center;
+   margin-top: 16px;
+   text-decoration: none;
+   box-sizing: border-box;
+  }
+
+  a.button_link_green
+  {
+   background-color: #C0FFC0;
+   background-image: linear-gradient(#C0FFC0, #C7E381);
+   border: 1px solid #C6DB72;
+   box-shadow: 0px 1px 0px 0px #C1FFFF inset;
+   text-shadow: 0px 1px 0px #C7FFCC;
+  }
+
+  a.button_link_pink
+  {
+   background-color: #FFC0C0;
+   background-image: linear-gradient(#FFC0C0, #FFA481);
+   border: 1px solid #FF9C72;
+   box-shadow: 0px 1px 0px 0px #FFC0FF inset;
+   text-shadow: 0px 1px 0px #FFC0CC;
+  }
+ </style>
+</%block>
+
+<%block name="js_extra">
+ <script type="text/javascript">
+  (
+   function()
+   {
+    $('.upload_ext_cert').click
+    (
+     function(event)
+     {
+      var self = $(this);
+      var cell = self.parents('td').first();
+      cell.find('.view_button').css('width', '30%');
+      cell.find('.upload_button').css('width', '70%');
+      self.css('display', 'none');
+      self.next().css('display', 'inline');
+      event.preventDefault();
+     }
+    )
+
+    $('.cert_file').change
+    (
+     function(event)
+     {
+      var self = $(this);
+      var file = this.files[0];
+      if (file.size > 2097152)
+      {
+       alert('The certificate size should not be more than 2 megabytes. This file size is '+file.size+' bytes.');
+       self.val(null);
+      }
+      if (self.val()) self.nextAll('button').first().removeAttr('disabled');
+      else self.nextAll('button').first().attr('disabled','disabled');
+     }
+    )
+
+    $('.upload_certificate').click
+    (
+     function(event)
+     {
+      event.preventDefault();
+      var formNode = this.parentNode.parentNode;
+      var data = new FormData(formNode);
+
+      function _success(data)
+      {
+       if (data.url !== undefined) window.location = data.url;
+       else if (data.ErrMsg !== undefined) alert(data.ErrMsg);
+       else alert("Incorrect server response");
+      }
+
+      function _error(jqxhr, status, err)
+      {
+        var msg;
+        try
+        {
+         var data = JSON.parse(jqxhr.responseText)
+         msg = data.ErrMsg ? data.ErrMsg : data.error;
+        }
+        catch(e)
+        {
+         msg = err;
+        }
+        if (!msg) msg = err;
+        alert(status+': '+msg);
+      }
+
+      var progress_info = $(this).nextAll('progress').first();
+      function _upload_progress(evt)
+      {
+       if (evt.lengthComputable)
+        progress_info.attr({value: evt.loaded, max: evt.total});
+       else progress_info.attr({value: 0, max: 0});
+      }
+
+      function _xhr()
+      {
+       var xhr = $.ajaxSettings.xhr();
+       if (xhr.upload)
+        xhr.upload.addEventListener("progress", _upload_progress, false);
+       return xhr;
+      }
+
+      var settings = {data: data, dataType: 'json', error: _error,
+         global: false, success: _success, type: "PUT", xhr: _xhr,
+         url: "/ext_course_enroll", processData:false, contentType:false};
+      $.ajax(settings);
+     }
+    )
+
+    $('.cancel_upload_certificate').click
+    (
+     function(event)
+     {
+      event.preventDefault();
+      var self = $(this);
+      var cell = self.parents('td').first();
+      cell.find('form').css('display', 'none').prev().css('display', 'inline');
+      cell.find('.view_button').css('width', '45%');
+      cell.find('.upload_button').css('width', '50%');
+     }
+    )
+   }
+  )(this);
+
+  $
+  (
+   function()
+   {
+    $('.cert_file').each
+    (
+     function(index)
+     {
+      var self = $(this);
+      if (self.val()) self.nextAll('button').first().removeAttr('disabled');
+      else self.nextAll('button').first().attr('disabled','disabled');
+     }
+    )
+   }
+  );
+ </script>
+</%block>
+
+<%block name="pagetitle">${_("Transcript")}</%block>
+
+<section class="container dashboard" id="dashboard-main" aria-hidden="false">
+
+  <section class="profile-sidebar">
+    <header class="profile">
+      <h1 class="user-name">${ user.username }</h1>
+    </header>
+    <section class="user-info">
+      <ul>
+        <li class="info--username">
+          <span class="title">${_("Full Name")} (<a href="#apply_name_change" rel="leanModal" class="edit-name">${_("edit")}</a>)</span> <span class="data">${ user.profile.name | h }</span>
+        </li>
+        <li class="info--email">
+          <span class="title">${_("Email")}
+            % if external_auth_map is None or 'shib' not in external_auth_map.external_domain:
+            (<a href="#change_email" rel="leanModal" class="edit-email">${_("edit")}</a>)
+            % endif
+          </span> <span class="data">${ user.email | h }</span>
+        </li>
+
+        % if settings.FEATURES.get('ENABLE_THIRD_PARTY_AUTH'):
+        <li class="controls--account">
+          <span class="title">
+            <div class="icon icon-gears"></div>
+            ## Translators: this section lists all the third-party authentication providers (for example, Google and LinkedIn) the user can link with or unlink from their edX account.
+            ${_("Account Links")}
+          </span>
+
+          <span class="data">
+            <span class="third-party-auth">
+
+            % for state in provider_user_states:
+            <div>
+
+              % if state.has_account:
+              <span class="icon icon-link pull-left"></span>
+              % else:
+              <span class="icon icon-unlink pull-left"></span>
+              % endif
+
+              <span class="provider">${state.provider.NAME}</span>
+              <span class="control">
+
+              % if state.has_account:
+                <form
+                  action="${pipeline.get_disconnect_url(state.provider.NAME)}"
+                  method="post"
+                  name="${state.get_unlink_form_name()}">
+                  <input type="hidden" name="csrfmiddlewaretoken" value="${csrf_token}">
+                </form>
+                <a href="#" onclick="document.${state.get_unlink_form_name()}.submit()">
+                  ## Translators: clicking on this removes the link between a user's edX account and their account with an external authentication provider (like Google or LinkedIn).
+                  ${_("unlink")}
+                </a>
+              % else:
+                <a href="${pipeline.get_login_url(state.provider.NAME, pipeline.AUTH_ENTRY_DASHBOARD)}">
+                  ## Translators: clicking on this creates a link between a user's edX account and their account with an external authentication provider (like Google or LinkedIn).
+                  ${_("link")}
+                </a>
+              % endif
+              </span>
+            </div>
+            % endfor
+          </span>
+        </li>
+        % endif
+
+        % if external_auth_map is None or 'shib' not in external_auth_map.external_domain:
+        <li class="controls--account">
+          <span class="title"><a href="#password_reset_complete" rel="leanModal" id="pwd_reset_button">${_("Reset Password")}</a></span>
+          <form id="password_reset_form" method="post" data-remote="true" action="${reverse('password_reset')}">
+            <input id="id_email" type="hidden" name="email" maxlength="75" value="${user.email}" />
+            <!-- <input type="submit" id="pwd_reset_button" value="${_('Reset Password')}" /> -->
+          </form>
+        </li>
+        % endif
+
+        <%include file='dashboard/_dashboard_status_verification.html' />
+
+        ##<%include file='dashboard/_dashboard_reverification_sidebar.html' />
+
+      </ul>
+    </section>
+  </section>
+
+  <section>
+    <header>
+      <h2>${_("My Transcript")}</h2>
+    </header>
+    <hr />
+    <select onchange="window.location.assign('/transcript?id='+this.value)" >
+      <option value="" ${'' if course_id else 'selected'}>
+        All courses
+      </option>
+      % for cn in set([c.url_name for c,e in course_enrollment_pairs]):
+        <option value="${cn}" ${'selected' if cn == course_id else ''}>
+	  ${cn}
+        </option>
+      % endfor
+    </select>
+    &nbsp;
+    <a href="/transcript.csv">
+      Export transcript as csv
+    </a>
+    <br />
+    <br />
+    <div class="float_left">
+     <table >
+      <tr>
+       <th>
+        ${_("Course Name")}
+       </th>
+       <th>
+        ${_("Score")}
+       </th>
+       <th>
+        ${_("Completion Date")}
+       </th>
+       <th>
+        ${_("Status")}
+       </th>
+      </tr>
+      % for course, enrollment in course_enrollment_pairs:
+       % if not course_id or course.url_name == course_id:
+        <tr>
+         <td>
+          ${course.display_name}
+         </td>
+         <td align="right">
+          ${'%i%%' % (round(100 * course.grade_summary['percent']),)}
+         </td>
+         <td>
+          <%
+           modified = cert_statuses[course.id].get('modified')
+          %>
+          ${modified.strftime('%m/%d/%y') if modified else 'N/A'}
+         </td>
+         <td>
+          <%
+           st = cert_statuses[course.id].get('status','')
+           if st in ('generating','ready'): st='complete'
+           elif st in ('notpassing',): st='failed'
+           else: st='incomplete'
+          %>
+          ${st}
+         </td>
+        </tr>
+       % endif
+      % endfor
+     </table>
+     <br />
+     <br />
+     <h3>
+      External Courses
+     </h3>
+     <table>
+      <tr>
+       <th>
+        Course Name
+       </th>
+       <th>
+        Status
+       </th>
+       <th>
+        Completion Date
+       </th>
+       <th>
+        Proof of Completion
+       </th>
+      </tr>
+      %for ece in ext_courses:
+       <tr>
+        <td>
+         ${ece.ext_course.title}
+        </td>
+        <td>
+         ${ece.status}
+        </td>
+        <td>
+         %if ece.completed_on:
+          ${ece.completed_on.strftime('%m/%d/%Y')}
+         %endif
+        </td>
+        <td>
+         <div class="float_left width_45pct view_button">
+          %if ece.proof_ref:
+           <a class="button_link button_link_green" href="/ext_course_proof/${ece.proof_ref.name.split('/')[-1]}" target="_blank">
+            View
+           </a>
+          %else:
+           &nbsp;
+          %endif
+         </div>
+         <div class="width_50pct float_left upload_button">
+          <a class="button_link button_link_pink upload_ext_cert" href="#">
+           Upload
+          </a>
+          <form action="" style="display: none">
+           <fieldset>
+            <legend>
+             Choose certificate file (&lt;2MB)
+            </legend>
+            <input type="hidden" name="ece_id" value="${ece.id}" />
+            <input type="file" name="cert_file" class="cert_file"/>
+            <br />
+            <button class="upload_certificate" disabled>
+             Upload
+            </button>
+            <button class="cancel_upload_certificate">
+             Cancel
+            </button>
+            <br />
+            <progress value="0" max="1">
+            </progress>
+           </fieldset>
+          </form>
+         </div>
+        </td>
+       </tr>
+      %endfor
+     </table>
+    </div>
+  </section>
+
+</section>
+
