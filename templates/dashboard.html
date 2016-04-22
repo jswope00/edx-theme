@@ -44,6 +44,104 @@ import json
         signInUser: "${reverse('signin_user')}",
         changeEmailSettings: "${reverse('change_email_settings')}"
       });
+    $('.upload_ext_cert').click
+    (
+     function(event)
+     {
+      event.preventDefault();
+      $(this).css('display', 'none').next().css('display', 'inline');
+     }
+    )
+    $('.cert_file').change
+    (
+     function(event)
+     {
+      var self = $(this);
+      var file = this.files[0];
+      if (file.size > 2097152)
+      {
+       alert('The certificate size should not be more than 2 megabytes. This file size is '+file.size+' bytes.');
+       self.val(null);
+      }
+      if (self.val()) self.nextAll('button').first().removeAttr('disabled');
+      else self.nextAll('button').first().attr('disabled','disabled');
+     }
+    )
+    $('.upload_certificate').click
+    (
+     function(event)
+     {
+      event.preventDefault();
+      var formNode = this.parentNode.parentNode;
+      var data = new FormData(formNode);
+      function _success(data)
+      {
+       if (data.url !== undefined) window.location = data.url;
+       else if (data.ErrMsg !== undefined) alert(data.ErrMsg);
+       else alert("Incorrect server response");
+      }
+      function _error(jqxhr, status, err)
+      {
+        var msg;
+        try
+        {
+         var data = JSON.parse(jqxhr.responseText)
+         msg = data.ErrMsg ? data.ErrMsg : data.error;
+        }
+        catch(e)
+        {
+         msg = err;
+        }
+        if (!msg) msg = err;
+        alert(status+': '+msg);
+      }
+      var progress_info = $(this).prevAll('span').first();
+      var old_time = 0;
+      function _upload_progress(evt)
+      {
+       var cur_time = new Date().getTime();
+       if (cur_time - old_time < 500) return;
+       old_time = cur_time;
+       if (evt.lengthComputable) 
+       {
+        var pct = parseInt(evt.loaded * 100 / evt.total);
+        progress_info.text(pct+'% loaded');
+       }
+       else progress_info.text('loading...');
+      }
+      function _xhr()
+      {
+       var xhr = $.ajaxSettings.xhr();
+       if (xhr.upload)
+        xhr.upload.addEventListener("progress", _upload_progress, false);
+       return xhr;
+      }
+      var settings = {data: data, dataType: 'json', error: _error,
+         global: false, success: _success, type: "PUT", xhr: _xhr,
+         url: "/ext_course_enroll", processData:false, contentType:false};
+      $.ajax(settings);
+     }
+    )
+    $('.cancel_upload_certificate').click
+    (
+     function(event)
+     {
+      event.preventDefault();
+      var form = $(this).parent().parent();
+      form.css('display', 'none').prev().css('display', 'inline');
+     }
+    )
+
+    $('.cert_file').each
+    (
+     function(index)
+     {
+      var self = $(this);
+      if (self.val()) self.nextAll('button').first().removeAttr('disabled');
+      else self.next().attr('disabled','disabled');
+     }
+    )
+
     });
   </script>
   % if settings.FEATURES.get('ENABLE_DASHBOARD_SEARCH'):
@@ -58,6 +156,31 @@ import json
         banner.showMessage(${json.dumps(redirect_message)})
     </%static:require_module>
   % endif
+</%block>
+
+<%block name="headextra">
+ <style type="text/css">
+  a.ext-cert-button
+  {
+   border: 1px solid #85FA11;
+   box-shadow: 0px 1px 0px 0px #CFF5AA inset;
+   color: #333;
+   background-color: #A9F45F;
+   background-image: linear-gradient(#A9F45F, #8DFB20);
+   text-decoration: none;
+   text-shadow: 0px 1px 0px #B3FD6B;
+   background-clip: padding-box;
+   box-sizing: border-box;
+   border-radius: 3px;
+   display: block;
+   float: left;
+   font: 15px/1.6rem "Source Sans","Open Sans",Verdana,Geneva,sans-serif,sans-serif;
+   letter-spacing: 0px;
+   padding: 6px 32px 7px;
+   text-align: center;
+   margin-top: 16px;
+  }
+ </style>
 </%block>
 
 <div class="dashboard-notifications" tabindex="-1">
@@ -129,6 +252,86 @@ import json
       % endfor
       </div>
     % endif
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <header>
+     <table style="width: 100%">
+      <tr>
+       <td>
+        <h2>
+         ${_("External Courses")}
+        </h2>
+       </td>
+       <td style="text-align: right">
+        <a href="/ext_course_learn" target="_blank">
+         Learn more
+        </a>
+       </td>
+      </tr>
+     </table>
+    </header>
+    <ul class="listing-courses">
+     % for ec in ext_courses:
+      <% ext_course = ec.ext_course %>
+      <li class="course-item">
+       <article class="course">
+        <div class="cover">
+         %if ext_course.image_ref:
+          <img src="/ext_course_image/${ext_course.image_ref.name.split('/')[-1]}" />
+         %endif
+        </div>
+        <section class="info">
+         <hgroup>
+          <p class="date-block">
+           ${ec.status}
+          </p>
+          <h3>
+           <a href="${ext_course.url}" target="_blank">
+            ${ext_course.title}
+           </a>
+          </h3>
+         </hgroup>
+         <a class="enter-course" href="${ext_course.url}" target="_blank" style="margin-right:16px" >
+          View Course
+         </a>
+         %if ec.proof_ref:
+          <a class="ext-cert-button" href="/ext_course_proof/${ec.proof_ref.name.split('/')[-1]}" target="_blank">
+           View Certificate
+          </a>
+         %else:
+          <a class="ext-cert-button upload_ext_cert" href="#">
+           Upload Certificate
+          </a>
+          <form action="" style="display: none">
+           <fieldset>
+            <legend>
+             Choose certificate file (&lt;2MB)
+            </legend>
+            <br />
+            <input type="hidden" name="ece_id" value="${ec.id}" />
+            <input type="file" name="cert_file" class="cert_file"/>
+            <br />
+            <span>
+            </span>
+            <br />
+            <button class="upload_certificate" disabled>
+             Upload
+            </button>
+            <button class="cancel_upload_certificate">
+             Cancel
+            </button>
+           </fieldset>
+          </form>
+         %endif
+        </section>
+       </article>
+      </li>
+     % endfor
+    </ul>
+
   </section>
 
   % if settings.FEATURES.get('ENABLE_DASHBOARD_SEARCH'):
