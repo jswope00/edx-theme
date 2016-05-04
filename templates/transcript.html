@@ -239,10 +239,6 @@
           </span> <span class="data">${ user.email | h }</span>
         </li>
 
-        %if len(language_options) > 1:
-        <%include file='dashboard/_dashboard_info_language.html' />
-        <%include file='dashboard/_dashboard_info_language.html' />
-        %endif
 
         % if settings.FEATURES.get('ENABLE_THIRD_PARTY_AUTH'):
         <li class="controls--account">
