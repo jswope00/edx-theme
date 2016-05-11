@@ -200,7 +200,7 @@ import json
 <section class="container dashboard" id="dashboard-main">
   <section class="my-courses" id="my-courses" role="main" aria-label="Content">
     <header class="wrapper-header-courses">
-      <h2 class="header-courses">${_("My Courses")}</h2>
+      <h2 class="header-courses">${_("Internal Courses")}</h2>
     </header>
 
 
@@ -254,84 +254,26 @@ import json
     % endif
     <br />
     <br />
-    <br />
-    <br />
-    <br />
-    <header>
-     <table style="width: 100%">
-      <tr>
-       <td>
-        <h2>
-         ${_("External Courses")}
-        </h2>
-       </td>
-       <td style="text-align: right">
-        <a href="/ext_course_learn" target="_blank">
-         Learn more
-        </a>
-       </td>
-      </tr>
-     </table>
+
+    % if len(ext_courses) > 0:
+    <header class="wrapper-header-courses">
+      <h2 class="header-courses">${_("External Courses")}
+      <span><a href="/ext_course_learn" target="_blank" style="float: right; text-transform: none;">${_("Learn more")}</a></span>
+      </h2>
     </header>
     <ul class="listing-courses">
-     % for ec in ext_courses:
-      <% ext_course = ec.ext_course %>
-      <li class="course-item">
-       <article class="course">
-        <div class="cover">
-         %if ext_course.image_ref:
-          <img src="/ext_course_image/${ext_course.image_ref.name.split('/')[-1]}" />
-         %endif
-        </div>
-        <section class="info">
-         <hgroup>
-          <p class="date-block">
-           ${ec.status}
-          </p>
-          <h3>
-           <a href="${ext_course.url}" target="_blank">
-            ${ext_course.title}
-           </a>
-          </h3>
-         </hgroup>
-         <a class="enter-course" href="${ext_course.url}" target="_blank" style="margin-right:16px" >
-          View Course
-         </a>
-         %if ec.proof_ref:
-          <a class="ext-cert-button" href="/ext_course_proof/${ec.proof_ref.name.split('/')[-1]}" target="_blank">
-           View Certificate
-          </a>
-         %else:
-          <a class="ext-cert-button upload_ext_cert" href="#">
-           Upload Certificate
-          </a>
-          <form action="" style="display: none">
-           <fieldset>
-            <legend>
-             Choose certificate file (&lt;2MB)
-            </legend>
-            <br />
-            <input type="hidden" name="ece_id" value="${ec.id}" />
-            <input type="file" name="cert_file" class="cert_file"/>
-            <br />
-            <span>
-            </span>
-            <br />
-            <button class="upload_certificate" disabled>
-             Upload
-            </button>
-            <button class="cancel_upload_certificate">
-             Cancel
-            </button>
-           </fieldset>
-          </form>
-         %endif
-        </section>
-       </article>
-      </li>
-     % endfor
+    % for course in ext_courses:
+		<% ext_course = course.ext_course %>
+                <% image_ref = ext_course.image_ref %>
+		<% status = course.status %>
+		<% course_title = ext_course.title %>
+		<% course_url = ext_course.url %>	
+		<% proof_ref = course.proof_ref %>
+		<% course_id = course.id %>
+		<%include file = 'dashboard/_dashboard_ext_course_listing.html' args="course_id=course_id, image_ref=image_ref, status=status, course_title=course_title, course_url=course_url, proof_ref=proof_ref" />
+	% endfor
     </ul>
-
+    % endif
   </section>
 
   % if settings.FEATURES.get('ENABLE_DASHBOARD_SEARCH'):

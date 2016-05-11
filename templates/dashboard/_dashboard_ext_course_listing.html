@@ -1,0 +1,66 @@
+<%page args="course_id, image_ref, status, course_title, course_url, proof_ref" />
+
+<li class="course-item">
+    
+<div class="course-container">
+<article class="course">
+  
+  <section class="details">
+    <div class="wrapper-course-image" aria-hidden="true">
+            <a href="${course_url}" data-course-key="" class="cover" target="_blank">
+              %if image_ref:
+                <img src="/ext_course_image/${image_ref.name.split('/')[-1]}" class="course-image" alt="${course_title}" />
+              %else:
+                <img src="" class="course-image" alt="${course_title}" />
+              %endif
+            </a>
+    </div>
+      <div class="wrapper-course-details">
+        <h3 class="course-title">
+              <a data-course-key="" href="${course_url}" target="_blank">${course_title}</a>
+        </h3>
+        <div class="course-info">
+          <span class="info-university" ${'style="color: green"' if status=='complete' else 'style="color: red"'}>${status}</span>
+        </div>
+        <div class="wrapper-course-actions">
+          <div class="course-actions">
+                  <a href="${course_url}" class="enter-course" data-course-key="" target="_blank">View Course<span class="sr">&nbsp;${course_title}</span></a>
+
+                <div class="wrapper-action-more" data-course-key="">
+                  %if proof_ref:
+                    <a href="/ext_course_proof/${proof_ref.name.split('/')[-1]}" class="action" data-course-key="" target="_blank">View Certificate<span class="sr">&nbsp;${course_title}</span></a>
+                  %else:
+                    <a class="action upload_ext_cert" href="#">Upload Certificate</a>
+                    <form action="" style="display: none">
+                     <fieldset>
+                      <legend>
+                       Choose certificate file (&lt;2MB)
+                      </legend>
+                      <br />
+                      <input type="hidden" name="ece_id" value="${course_id}" />
+                      <input type="file" name="cert_file" class="cert_file"/>
+                      <br />
+                      <span>
+                      </span>
+                      <br />
+                      <button class="upload_certificate" disabled>
+                       Upload
+                      </button>
+                      <button class="cancel_upload_certificate">
+                       Cancel
+                      </button>
+                     </fieldset>
+                    </form>
+                  %endif
+                </div>
+          </div>
+        </div>
+      </div>
+  </section>
+  <footer class="wrapper-messages-primary">
+    <ul class="messages-list">
+    </ul>
+  </footer>
+</article>
+</div>
+</li>
