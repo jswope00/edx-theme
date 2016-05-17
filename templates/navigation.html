@@ -41,24 +41,30 @@ site_status_msg = get_site_status_msg(course_id)
   .lang_nav {
     height: 25px;
     width: 100%;
-    background: #404040;
+    background: #DCDCDC;
   }
   .lang_list {
-    list-style: none;
-    display: inline-flex;
     padding: 5px 50px;
+    width: 1180px;
+    margin: 0 auto;
   }
   .lang_item {
      padding: 0 20px;
      border-right: 1px solid #999;
+     display: inline-block;
+  }
+  .lang_item a {
+     color: #5D5862;
   }
   .lang_item_last {
      border-right: none;
   }
+  .selected_lang {
+     font-weight: bold;
+  }
 </style>
 
  <nav aria-label="Global" class="lang_nav">
-        <% languages = static.get_released_languages() %>
 	<form action="/i18n/setlang/" method="post" class="settings-language-form" id="language-settings-form">
             <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="${csrf_token}">
             % if user.is_authenticated():
@@ -67,11 +73,12 @@ site_status_msg = get_site_status_msg(course_id)
             <input title="session update url" type="hidden" class="url-endpoint" value="${reverse('session_language')}" data-user-is-authenticated="false">
             % endif
             <ul class="lang_list">
-	    % for language in languages:
-                <li class="lang_item">
-                    <a href="#" class="lang_change_link" id="${language[0]}">${language[1]}</a>
+                <li ${'class="lang_item selected_lang"' if LANGUAGE_CODE == 'en' else 'class="lang_item"' | n}>
+                    <a href="#" class="lang_change_link" id="en">English</a>
                 </li>
-	    % endfor
+                <li ${'class="lang_item selected_lang lang_item_last"' if LANGUAGE_CODE == 'es-419' else 'class="lang_item lang_item_last"' | n}>
+                    <a href="#" class="lang_change_link" id="es-419">Espanol</a>
+                </li>
             </ul>
 	</form>
  </nav>
