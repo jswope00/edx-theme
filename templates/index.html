@@ -19,6 +19,267 @@ from microsite_configuration import microsite
 
 <section class="home">
   <header>
+
+<!-- Dept Buttons Bar CSS -->
+    <style>
+        .seclect-courses{ padding: 10px 0; }
+        .button-corp,
+        .button-operation,
+        .button-transport,
+        .button-foodk {
+            color: white;
+            border-radius: 4px;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+            padding: 25px 0;
+            text-align: center;
+            text-decoration: none;
+        }
+        a.button-corp,
+        a.button-operation,
+        a.button-transport,
+        a.button-foodk {
+            text-decoration: none;
+            display: inline-block;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        a.button-corp:hover,
+        a.button-operation:hover,
+        a.button-transport:hover,
+        a.button-foodk:hover{
+            color: #ccc;
+        }
+
+        .button-corp {
+            background: rgb(28, 184, 65); /* this is a green */
+        }
+
+        .button-operation {
+            background: rgb(248, 152, 60); /* this is a maroon */
+        }
+
+        .button-transport {
+            background: rgb(40, 54, 130); /* this is an orange */
+        }
+
+        .button-foodk {
+            background: rgb(115, 35, 130); /* this is a light blue */
+        }
+
+        .pure-button{
+          float: left;
+          display: block;
+          margin-right: 2.35765%;
+          width: 23.23176%;
+	  margin-bottom: 10px;
+        }
+
+
+        /*Orange Color*/
+
+       .courses-section-orange {
+        width: 100%;
+        height: auto;
+        margin-top: 25px;
+        padding: 10px 0;
+        border-radius: 4px;
+        position: relative;
+        border: 1px solid #e27e17;
+        float: left;
+        background-color: rgba(248, 153, 56, 1);
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important
+        }
+
+      .courses-section-orange:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-top-color: #fff;
+        border-width: 15px;
+        margin-left: -15px;
+        border-top-color: #f89938;
+      }
+
+        /*Orange Color*/
+
+        /*green Color*/
+
+       .courses-section-green {
+        width: 100%;
+        height: auto;
+        margin-top: 25px;
+        padding: 10px 0;
+        border-radius: 4px;
+        position: relative;
+        border: 1px solid #10a032;
+        float: left;
+        background: rgb(28, 184, 65); /* this is a green */
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important
+        }
+
+      .courses-section-green:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-width: 15px;
+        margin-left: -15px;
+        border-top-color: rgb(28, 184, 65); /* this is a green */
+      }
+
+        /*green Color*/
+
+        /*blue Color*/
+
+       .courses-section-blue {
+        width: 100%;
+        height: auto;
+        margin-top: 25px;
+        padding: 10px 0;
+        border-radius: 4px;
+        position: relative;
+        border: 1px solid #18256f;
+        float: left;
+        background: rgb(40, 54, 130); /* this is an blue */
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important
+        }
+
+      .courses-section-blue:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-width: 15px;
+        margin-left: -15px;
+        border-top-color: rgb(40, 54, 130); /* this is an blue */
+      }
+
+        /*blue Color*/
+
+      /*purple Color*/
+
+       .courses-section-purple {
+        width: 100%;
+        height: auto;
+        margin-top: 25px;
+        padding: 10px 0;
+        border-radius: 4px;
+        position: relative;
+        border: 1px solid #591266;
+        float: left;
+        background: rgb(115, 35, 130); /* this is a purple */
+        box-shadow:0 2px 4px 0 rgba(0,0,0,0.16),0 2px 10px 0 rgba(0,0,0,0.12)!important
+        }
+
+      .courses-section-purple:after {
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        position: absolute;
+        border-width: 15px;
+        margin-left: -15px;
+        border-top-color: rgb(115, 35, 130); /* this is a purple */
+      }
+
+        /*purple Color*/
+
+      
+@media screen and (min-width: 980px){
+    .pure-button:nth-child(4n+1) {
+        clear: left;
+    }
+        .pure-button:nth-child(4n) {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 979px) and (min-width: 769px){
+
+    .pure-button:nth-child(3n+1) {
+           clear: left;
+    }
+
+    .pure-button{
+    float: left;
+    display: block;
+    margin-right: 2.35765%;
+    width: 31.76157%;
+    margin-bottom: 30px;
+}
+
+    .pure-button:nth-child(3n) {
+        margin-right: 0;
+      }
+}
+
+@media screen and (max-width: 768px) and (min-width: 541px){
+
+      .pure-button{
+        float: left;
+        display: block;
+        margin-right: 3.57866%;
+        width: 48.21067%;
+        margin-bottom: 30px;
+    }
+
+     .pure-button:nth-child(2n) {
+        margin-right: 0;
+    }
+}
+
+@media screen and (max-width: 540px){
+
+      .pure-button{
+          float: left;
+          display: block;
+          margin: 0 0 30px 0;
+          width: 100%;
+        }
+}
+
+.skill_tags{ 
+        padding: 10px 0;
+        float: left;
+        width: 100%;
+        margin: 10px 0;
+}
+
+.skill_label{
+	display: block;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+
+.tag_btn{ 
+   border-radius: 4px;
+    font-family: Arial;
+    color: #666;
+    font-size: 13px;
+    background: #f1f0e6;
+    padding: 10px 20px 10px 20px;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 0.3);
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.tag_btn.active{
+    background: #909090;
+    color: #fff;
+}
+    </style>
+    <!-- Dept Buttons Bar CSS/ End-->
+
     <!--Comment out the Pop-up Box..
     <div class="outer-wrapper">
       <div class="title">
@@ -64,7 +325,28 @@ from microsite_configuration import microsite
 
   </header>
   <section class="courses-container">
-    <section class="highlighted-courses">
+
+  <!-- Dept Buttons Bar HTML -->
+
+    <div class="seclect-courses">
+        <a class="button-corp pure-button ">Corporate</a>
+        <a class="button-operation pure-button ">Operations</a>
+        <a class="button-transport pure-button ">Transportation</a>
+        <a class="button-foodk pure-button ">FoodKick</a>
+    </div>
+
+    <div class="courses-section-orange" style="display:none"></div>
+    <div class="courses-section-green " style="display:none"></div>
+    <div class="courses-section-blue " style="display:none"></div>
+    <div class="courses-section-purple " style="display:none"></div>
+
+    <div class="skill_tags">
+<span class="skill_label" style="display:none">Skills </span>
+</div>
+
+  <!-- Dept Buttons Bar HTML -->
+
+<section class="highlighted-courses">
 
       % if settings.FEATURES.get('COURSES_ARE_BROWSABLE'):
         <section class="courses">
@@ -107,8 +389,161 @@ from microsite_configuration import microsite
               $('#login').trigger("click");
          }
       })
+
    </script>
 </%block>
+
+<!-- Dept Buttons Bar JAVASCRIPT -->
+<script type="text/javascript">
+$(function() {
+"use strict";
+
+var array_courses = [];
+var cross_clicked = false;
+<!-- Initially stored all courses in an array and remove the courses from page -->
+$('.courses-listing-item').each(function(){
+	array_courses.push($(this));
+});
+$(".courses-listing-item").remove();
+<!-- return the distinct Tags -->
+function onlyUnique(value, index, self) { 
+    return self.indexOf(value) === index;
+}
+<!-- Show courses of active tags only -->
+function onlyActive(dept_courses_list, color){
+
+	var y = [];
+	$(".courses-listing-item").remove();
+	$('.tag_btn').each(function(){
+		if($(this).hasClass("active"))
+			y.push($(this).text().slice(0, -1));
+	});
+	for (var m = 0; m < dept_courses_list.length; m++) {
+		var temp_tags = [];
+		var item = dept_courses_list[m];
+		var tag = item[0]["children"][0].getAttribute("data-tags");
+				var lt = /\s*,\s*/;
+                                var x = tag.split(lt);
+                                for (var j = 0; j < x.length; j++) {
+                                        temp_tags.push(x[j]);
+                                }
+		for (var n = 0; n < temp_tags.length; n++) {
+			
+			var match = y.indexOf(temp_tags[n])
+			if (match !== -1){
+				$(".courses-listing").append(item);
+			}
+		}
+	}
+	$(".course").css("border-bottom-color",color);
+}
+<!-- Handle the compelete courses and tagging process according to Dept/Org -->
+function deptCourses(btn, color){
+
+	var dept_courses_list = [];
+	var dept_tags_list = [];
+	$(".courses-listing-item").remove();
+	$(".tag_btn").remove();
+	for (var i = 0; i < array_courses.length; i++) {
+		var item = array_courses[i];
+		var id = item[0]["children"][0].getAttribute("id");
+		var se = new RegExp(btn, 'g');
+		var res = id.match(se);
+        if (res !== null){
+			dept_courses_list.push(item);
+			var tag = item[0]["children"][0].getAttribute("data-tags");
+			if (tag !== "None" && tag !== " " && tag !== ""){
+				var lt = /\s*,\s*/;
+				var x = tag.split(lt);
+				for (var j = 0; j < x.length; j++) {
+					dept_tags_list.push(x[j]);
+				}
+			}
+			$(".courses-listing").append(item);
+    	}
+	}
+	$(".course").css("border-bottom-color",color);
+	dept_tags_list = dept_tags_list.filter( onlyUnique );
+	dept_tags_list.sort();
+
+	if (dept_tags_list.length > 0)
+		$(".skill_label").show();
+
+	for (var k = 0; k < dept_tags_list.length; k++){
+		var div = document.createElement("div");
+		div.innerHTML = dept_tags_list[k];
+		div.setAttribute('class', 'tag_btn');
+        var span = document.createElement("span");
+    	span.setAttribute('class', 'tag_btn_cross');
+		span.innerHTML = "x";
+        span.style.fontSize = "16px";
+        span.style.paddingLeft = "5px";
+        span.style.display = "none";
+		div.appendChild(span);
+		$(".skill_tags").append(div);
+	}
+
+    $(".tag_btn").on('click', function(){
+		if(!cross_clicked){
+            $(this).addClass("active");
+			$(this).find(".tag_btn_cross").css("display","inline-block");
+			onlyActive(dept_courses_list);
+		}
+        else
+    	    cross_clicked = false;
+    });
+
+    $(".tag_btn_cross").on('click', function(){
+        $(this).parent().removeClass("active");
+        $(this).css("display","none");
+		cross_clicked = true;
+		onlyActive(dept_courses_list);
+    });
+
+}
+<!-- CORP btn -->
+  $(".button-corp").click(function(){
+
+	var btn = 'CORP';
+        var color = '#1CB841';
+        deptCourses(btn,color);
+	$(".courses-section-orange, .courses-section-blue, .courses-section-purple").hide();
+	$(".courses-section-green").show();
+
+});
+
+<!-- Operations btn -->
+  $(".button-operation").click(function(){
+
+	var btn = 'Operations';
+        var color = '#F89938';
+        deptCourses(btn,color);
+        $(".courses-section-green, .courses-section-blue, .courses-section-purple").hide();
+        $(".courses-section-orange").show();
+});
+<!-- Transportation btn -->
+  $(".button-transport").click(function(){
+
+	var btn = 'Transportation';
+        var color = '#283682';
+        deptCourses(btn,color);
+        $(".courses-section-orange, .courses-section-green, .courses-section-purple").hide();
+        $(".courses-section-blue").show();
+});
+<!-- FoodKick btn-->
+  $(".button-foodk").click(function(){
+
+	var btn = 'FoodKick';
+        var color = '#732382';
+        deptCourses(btn,color);
+        $(".courses-section-orange, .courses-section-blue, .courses-section-green").hide();
+        $(".courses-section-purple").show();
+});
+});
+</script>
+<!-- Dept Buttons Bar JAVASCRIPT -->
+
+
 
 % if show_signup_immediately is not UNDEFINED:
   ## NOTE: This won't work in production, because anonymous views are cached, so it will
@@ -117,3 +552,5 @@ from microsite_configuration import microsite
   $(window).load(function() {$('#signup_action').trigger("click");});
 </script>
 % endif
+
+
