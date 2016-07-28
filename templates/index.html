@@ -456,7 +456,9 @@ function deptCourses(btn, color){
 				var lt = /\s*,\s*/;
 				var x = tag.split(lt);
 				for (var j = 0; j < x.length; j++) {
+				    if (x[j] !== "None" && x[j] !== " " && x[j] !== ""){
 					dept_tags_list.push(x[j]);
+				    }
 				}
 			}
 			$(".courses-listing").append(item);
